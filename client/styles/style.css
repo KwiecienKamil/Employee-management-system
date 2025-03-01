@@ -1,0 +1,19 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.wrapper {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #999680;
+    background-image: linear-gradient(43deg, #999680 0%, #6d6b6d 46%, #ddc8a3 100%);
+    position: relative;
+    padding: 1rem;
+}
+.application_wrapper {
+    height: 100vh;
+    width: 100%;
+    background-color: black;
+    
+}
