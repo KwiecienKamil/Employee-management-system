@@ -24,11 +24,15 @@ main {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: 10px;
   backdrop-filter: blur(10px);
-  border-radius: 20px;
+  border-radius: 15px;
   border: 1px solid black;
+  padding: 0.3rem;
 }
 
 .application_wrapper .main_dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-grow: 1;
   background-color: #fefefa;
   border-top-right-radius: 10px;
@@ -124,4 +128,35 @@ main {
   align-items: center;
   justify-content: start;
   gap: 1rem;
+}
+
+.login-container,
+.register-container {
+  max-width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fefefe;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-container input,
+.register-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.logout_btn {
+  padding: 8px 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+
+.logout_btn:hover {
+  background-color: #c82333;
 }
