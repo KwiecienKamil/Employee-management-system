@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  /*** 🔹 DOM Elements ***/
   const navBar = document.querySelector("nav");
   const mainDashboard = document.querySelector(".main_dashboard");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -7,50 +6,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /*** 🔹 Authentication Functions ***/
 
-  // Check if user is logged in
   function isLoggedIn() {
     return localStorage.getItem("loggedInUser") !== null;
   }
 
-  // Show login form
   function loadLoginPage() {
     navBar.style.display = "none";
     mainDashboard.style.backgroundColor = "transparent";
-    mainDashboard.innerHTML = `
-      <div class="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <button id="loginBtn">Login</button>
-        <p>Don't have an account? <a href="#" id="registerLink">Register</a></p>
-      </div>
-    `;
 
-    document.getElementById("loginBtn").addEventListener("click", loginUser);
-    document
-      .getElementById("registerLink")
-      .addEventListener("click", loadRegisterPage);
+    fetch("pages/auth/login.html")
+      .then((response) => response.text())
+      .then((html) => {
+        mainDashboard.innerHTML = html;
+
+        document
+          .getElementById("loginBtn")
+          .addEventListener("click", loginUser);
+        document
+          .getElementById("registerLink")
+          .addEventListener("click", loadRegisterPage);
+      })
+      .catch((error) => console.error("Error loading the login page:", error));
   }
 
-  // Show register form
   function loadRegisterPage() {
     mainDashboard.style.backgroundColor = "transparent";
-    mainDashboard.innerHTML = `
-      <div class="register-container">
-        <h2>Register</h2>
-        <input type="text" id="newUsername" placeholder="Choose a Username" required />
-        <input type="password" id="newPassword" placeholder="Choose a Password" required />
-        <button id="registerBtn">Register</button>
-        <p>Already have an account? <a href="#" id="loginLink">Login</a></p>
-      </div>
-    `;
 
-    document
-      .getElementById("registerBtn")
-      .addEventListener("click", registerUser);
-    document
-      .getElementById("loginLink")
-      .addEventListener("click", loadLoginPage);
+    fetch("pages/auth/register.html")
+      .then((response) => response.text())
+      .then((html) => {
+        mainDashboard.innerHTML = html;
+
+        document
+          .getElementById("registerBtn")
+          .addEventListener("click", registerUser);
+        document
+          .getElementById("loginLink")
+          .addEventListener("click", loadLoginPage);
+      })
+      .catch((error) =>
+        console.error("Error loading the register page:", error)
+      );
   }
 
   // Handle login
@@ -103,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`pages/${section}.html`)
+    fetch(`pages//mainDashboard/${section}.html`)
       .then((response) => {
         if (!response.ok) throw new Error("Page not found");
         return response.text();
@@ -121,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Update active navigation link
   function updateActiveLink(activeSection) {
     navLinks.forEach((link) => {
       link.classList.toggle(
@@ -133,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /*** 🔹 Event Listeners ***/
 
-  // Handle navigation click
   navLinks.forEach((link) => {
     link.addEventListener("click", function (event) {
       event.preventDefault();
@@ -142,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Attach logout button event
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logoutUser);
   }
