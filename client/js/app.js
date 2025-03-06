@@ -48,18 +48,37 @@ document.addEventListener("DOMContentLoaded", function () {
       );
   }
 
-  // Handle login
-  function loginUser() {
-    const username = document.getElementById("username").value;
+  async function loginUser() {
+    const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    localStorage.clear();
+    try {
+      const response = await fetch("http://localhost:8081/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }), // Send email and password in the body
+      });
+      const data = await response.json();
 
-    // Dummy login check
-    if (username === "admin" && password === "1234") {
-      localStorage.setItem("loggedInUser", username);
-      mainDashboard.style.backgroundColor = "white";
-      loadDashboard();
-    } else {
-      alert("Invalid username or password!");
+      if (data.message) {
+        alert(data.message);
+      } else {
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify({
+            id: data[0].id_pracownika,
+            imie: data[0].imie,
+            nazwisko: data[0].nazwisko,
+            stanowisko: data[0].stanowisko,
+          })
+        );
+        mainDashboard.style.backgroundColor = "white";
+        loadDashboard();
+      }
+    } catch (error) {
+      alert("Something went wrong, please try again.");
     }
   }
 
@@ -98,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`pages//mainDashboard/${section}.html`)
+    fetch(`pages/mainDashboard/${section}.html`)
       .then((response) => {
         if (!response.ok) throw new Error("Page not found");
         return response.text();
