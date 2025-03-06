@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadLoginPage() {
     navBar.style.display = "none";
     mainDashboard.style.backgroundColor = "transparent";
-
     fetch("pages/auth/login.html")
       .then((response) => response.text())
       .then((html) => {

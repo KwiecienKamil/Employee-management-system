@@ -16,6 +16,7 @@ main {
     #ddc8a3 100%
   );
   padding: 2rem;
+  font-family: "Saira Semi Condensed", sans-serif;
 }
 .application_wrapper {
   flex-grow: 1;
@@ -37,6 +38,9 @@ main {
   background-color: #fefefa;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .application_wrapper nav .logo {
@@ -112,7 +116,6 @@ main {
 
 .active {
   background: linear-gradient(to right, rgb(138, 140, 143), transparent);
-  color: rgba(0, 0, 0, 0.3);
 }
 
 .application_wrapper nav .navigation li a:hover::before {
@@ -132,19 +135,63 @@ main {
 
 .login-container,
 .register-container {
-  max-width: 300px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #fefefe;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  min-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 1.1rem;
 }
-
+.login-container h2,
+.register-container h2 {
+  margin-bottom: 1rem;
+}
 .login-container input,
 .register-container input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
+  background: rgba(0, 0, 0, 0.3);
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  color: white;
+}
+#loginBtn,
+#registerBtn {
+  width: 100%;
+  padding: 0.5rem 0rem 0.5rem 0;
+  color: white;
+  background: rgb(6, 180, 6);
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  font-size: 1rem;
+}
+#loginBtn:hover,
+#registerBtn:hover {
+  filter: brightness(80%);
+  transition: 0.2s;
+  cursor: pointer;
+}
+.form_nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+.form_nav a {
+  color: white;
+  filter: brightness(80%);
+  transition: 0.2s;
+}
+.form_nav a:hover {
+  color: #c9c7c7;
 }
 
 .logout_btn {
