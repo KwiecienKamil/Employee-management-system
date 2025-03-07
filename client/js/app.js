@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // Send email and password in the body
+        body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
 
@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Handle registration
   function registerUser() {
     const newUsername = document.getElementById("newUsername").value;
     const newPassword = document.getElementById("newPassword").value;
@@ -96,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Logout user
   function logoutUser() {
     localStorage.removeItem("loggedInUser");
     loadLoginPage();
@@ -104,13 +102,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /*** 🔹 Dashboard & Navigation ***/
 
-  // Show dashboard after login
   function loadDashboard() {
     navBar.style.display = "flex";
     loadContent("start");
   }
 
-  // Load content dynamically
   function loadContent(section, addToHistory = true) {
     if (!isLoggedIn()) {
       loadLoginPage();
@@ -158,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutBtn.addEventListener("click", logoutUser);
   }
 
-  // Handle back/forward navigation
   window.addEventListener("popstate", (event) => {
     if (event.state && event.state.section) {
       loadContent(event.state.section, false);
