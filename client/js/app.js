@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const navBar = document.querySelector("nav");
   const mainDashboard = document.querySelector(".main_dashboard");
   const logoutBtn = document.getElementById("logoutBtn");
+  const loginFormSubmitBtn = document.getElementById("loginBtn");
   const navLinks = document.querySelectorAll(".navigation a");
 
   /*** 🔹 Authentication Functions ***/
@@ -13,17 +14,22 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadLoginPage() {
     navBar.style.display = "none";
     mainDashboard.style.backgroundColor = "transparent";
+
     fetch("pages/auth/login.html")
       .then((response) => response.text())
       .then((html) => {
         mainDashboard.innerHTML = html;
 
-        document
-          .getElementById("loginBtn")
-          .addEventListener("click", loginUser);
-        document
-          .getElementById("registerLink")
-          .addEventListener("click", loadRegisterPage);
+        const loginFormSubmitBtn = document.getElementById("loginBtn");
+        const registerLink = document.getElementById("registerLink");
+
+        if (loginFormSubmitBtn) {
+          loginFormSubmitBtn.addEventListener("click", loginUser);
+        }
+
+        if (registerLink) {
+          registerLink.addEventListener("click", loadRegisterPage);
+        }
       })
       .catch((error) => console.error("Error loading the login page:", error));
   }
@@ -74,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
             stanowisko: data[0].stanowisko,
           })
         );
+
         mainDashboard.style.backgroundColor = "white";
         loadDashboard();
       }
