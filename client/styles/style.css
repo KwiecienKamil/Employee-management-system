@@ -131,6 +131,14 @@ main {
   align-items: center;
   justify-content: start;
   gap: 1rem;
+  padding: 0.8rem;
+  background-image: linear-gradient(
+    43deg,
+    #ddc8a3 0%,
+    #7e7d7e 46%,
+    #999680 100%
+  );
+  border-radius: 10px;
 }
 
 .login-container,

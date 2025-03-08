@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const logoutBtn = document.getElementById("logoutBtn");
   const loginFormSubmitBtn = document.getElementById("loginBtn");
   const navLinks = document.querySelectorAll(".navigation a");
+  const profileUserName = document.querySelector(".profile_user_info h3");
+  const profileUserPosition = document.querySelector(".profile_user_info p");
 
   /*** 🔹 Authentication Functions ***/
 
@@ -80,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
             stanowisko: data[0].stanowisko,
           })
         );
-
         mainDashboard.style.backgroundColor = "white";
         loadDashboard();
       }
@@ -109,9 +110,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /*** 🔹 Dashboard & Navigation ***/
 
+  async function getUserInfo() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const user_id = user.id;
+    try {
+      const response = await fetch("http://localhost:8081/userInfo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      });
+      const data = await response.json();
+
+      if (data.message) {
+        alert(data.message);
+      } else {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      }
+    } catch (error) {
+      alert("Something went wrong, please try again.");
+    }
+    profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
+    profileUserPosition.textContent = user.stanowisko;
+  }
+
   function loadDashboard() {
     navBar.style.display = "flex";
     loadContent("start");
+    getUserInfo();
   }
 
   function loadContent(section, addToHistory = true) {
