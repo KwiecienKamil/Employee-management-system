@@ -35,12 +35,13 @@ main {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  background-color: #fefefa;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+  background: #fefefe;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  padding: 1rem;
 }
 
 .application_wrapper nav .logo {
@@ -84,7 +85,7 @@ main {
   padding-right: 1rem;
 }
 .application_wrapper nav .navigation {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 .application_wrapper nav .navigation li a {
   display: block;
@@ -138,7 +139,8 @@ main {
     #7e7d7e 46%,
     #999680 100%
   );
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .login-container,
@@ -214,4 +216,6 @@ main {
 
 .logout_btn:hover {
   background-color: #c82333;
+  transition: 0.3s;
 }
+/* Main content */

@@ -2,16 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const navBar = document.querySelector("nav");
   const mainDashboard = document.querySelector(".main_dashboard");
   const logoutBtn = document.getElementById("logoutBtn");
-  const loginFormSubmitBtn = document.getElementById("loginBtn");
   const navLinks = document.querySelectorAll(".navigation a");
   const profileUserName = document.querySelector(".profile_user_info h3");
   const profileUserPosition = document.querySelector(".profile_user_info p");
-
   /*** 🔹 Authentication Functions ***/
 
-  function isLoggedIn() {
-    return localStorage.getItem("loggedInUser") !== null;
-  }
+  const isLoggedIn = () => localStorage.getItem("loggedInUser") !== null;
 
   function loadLoginPage() {
     navBar.style.display = "none";
@@ -21,55 +17,34 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.text())
       .then((html) => {
         mainDashboard.innerHTML = html;
-
-        const loginFormSubmitBtn = document.getElementById("loginBtn");
-        const registerLink = document.getElementById("registerLink");
-
-        if (loginFormSubmitBtn) {
-          loginFormSubmitBtn.addEventListener("click", loginUser);
-        }
-
-        if (registerLink) {
-          registerLink.addEventListener("click", loadRegisterPage);
-        }
+        document
+          .getElementById("loginBtn")
+          ?.addEventListener("click", loginUser);
+        document
+          .getElementById("registerLink")
+          ?.addEventListener("click", loadRegisterPage);
       })
       .catch((error) => console.error("Error loading the login page:", error));
   }
 
-  function loadRegisterPage() {
-    mainDashboard.style.backgroundColor = "transparent";
-
-    fetch("pages/auth/register.html")
-      .then((response) => response.text())
-      .then((html) => {
-        mainDashboard.innerHTML = html;
-
-        document
-          .getElementById("registerBtn")
-          .addEventListener("click", registerUser);
-        document
-          .getElementById("loginLink")
-          .addEventListener("click", loadLoginPage);
-      })
-      .catch((error) =>
-        console.error("Error loading the register page:", error)
-      );
-  }
-
   async function loginUser() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email")?.value;
+    const password = document.getElementById("password")?.value;
     localStorage.clear();
+
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8081/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
 
+      const data = await response.json();
       if (data.message) {
         alert(data.message);
       } else {
@@ -82,24 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
             stanowisko: data[0].stanowisko,
           })
         );
-        mainDashboard.style.backgroundColor = "white";
+        mainDashboard.style.background = "#FEFEFE";
+        mainDashboard.style.justifyContent = "start";
         loadDashboard();
       }
     } catch (error) {
       alert("Something went wrong, please try again.");
-    }
-  }
-
-  function registerUser() {
-    const newUsername = document.getElementById("newUsername").value;
-    const newPassword = document.getElementById("newPassword").value;
-
-    if (newUsername && newPassword) {
-      localStorage.setItem(newUsername, newPassword);
-      alert("Registration successful! Please log in.");
-      loadLoginPage();
-    } else {
-      alert("Please fill all fields.");
     }
   }
 
@@ -112,25 +75,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function getUserInfo() {
     const user = JSON.parse(localStorage.getItem("loggedInUser"));
-    const user_id = user.id;
-    try {
-      const response = await fetch("http://localhost:8081/userInfo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id }),
-      });
-      const data = await response.json();
 
-      if (data.message) {
-        alert(data.message);
-      } else {
+    if (!user) return;
+
+    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (!userInfo) {
+      try {
+        const response = await fetch("http://localhost:8081/userInfo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: user.id }),
+        });
+
+        const data = await response.json();
+        if (data.message) {
+          alert(data.message);
+          return;
+        }
+
         localStorage.setItem("userInfo", JSON.stringify(data));
+        userInfo = data;
+      } catch (error) {
+        alert("Something went wrong, please try again.");
+        return;
       }
-    } catch (error) {
-      alert("Something went wrong, please try again.");
     }
+
+    const mapped = userInfo.map((info) => {
+      return [info.task_description, info.task_status];
+    });
+
+    const loadTasks = document.querySelector(".my-tasks");
+    mapped.forEach(([description, status]) => {
+      const taskDiv = document.createElement("div");
+      taskDiv.innerHTML = `<strong>Opis:</strong> ${description} <br> <strong>Status:</strong> ${status}`;
+      taskDiv.classList.add("task-item");
+      loadTasks.appendChild(taskDiv);
+    });
+
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
     profileUserPosition.textContent = user.stanowisko;
   }
@@ -148,13 +131,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     fetch(`pages/mainDashboard/${section}.html`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Page not found");
-        return response.text();
-      })
+      .then((response) =>
+        response.ok ? response.text() : Promise.reject("Page not found")
+      )
       .then((html) => {
         mainDashboard.innerHTML = html;
         updateActiveLink(section);
+
+        if (section === "start") {
+          getUserInfo();
+        }
 
         if (addToHistory) {
           history.pushState({ section }, "", `?page=${section}`);
@@ -179,26 +165,19 @@ document.addEventListener("DOMContentLoaded", function () {
   navLinks.forEach((link) => {
     link.addEventListener("click", function (event) {
       event.preventDefault();
-      const section = this.getAttribute("data-section");
-      loadContent(section);
+      loadContent(this.getAttribute("data-section"));
     });
   });
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", logoutUser);
-  }
+  logoutBtn?.addEventListener("click", logoutUser);
 
   window.addEventListener("popstate", (event) => {
-    if (event.state && event.state.section) {
+    if (event.state?.section) {
       loadContent(event.state.section, false);
     }
   });
 
   /*** 🔹 Initialize App ***/
 
-  if (isLoggedIn()) {
-    loadDashboard();
-  } else {
-    loadLoginPage();
-  }
+  isLoggedIn() ? loadDashboard() : loadLoginPage();
 });
