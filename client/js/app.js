@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".navigation a");
   const profileUserName = document.querySelector(".profile_user_info h3");
   const profileUserPosition = document.querySelector(".profile_user_info p");
+
   /*** 🔹 Authentication Functions ***/
 
   const isLoggedIn = () => localStorage.getItem("loggedInUser") !== null;
@@ -79,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!user) return;
 
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
     if (!userInfo) {
       try {
         const response = await fetch("http://localhost:8081/userInfo", {
@@ -107,6 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const loadTasks = document.querySelector(".my-tasks");
+    if (!loadTasks) {
+      console.error("Element with class 'my-tasks' not found.");
+      return;
+    }
+
     mapped.forEach(([description, status]) => {
       const taskDiv = document.createElement("div");
       taskDiv.innerHTML = `<strong>Opis:</strong> ${description} <br> <strong>Status:</strong> ${status}`;
@@ -118,10 +123,63 @@ document.addEventListener("DOMContentLoaded", function () {
     profileUserPosition.textContent = user.stanowisko;
   }
 
+  async function getInventory() {
+    let inventory = JSON.parse(localStorage.getItem("inventory"));
+
+    if (!inventory) {
+      try {
+        const response = await fetch("http://localhost:8081/getInventory", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch inventory data");
+        }
+
+        const data = await response.json();
+        console.log("Inventory Data:", data);
+
+        // Store data in localStorage
+        localStorage.setItem("inventory", JSON.stringify(data));
+
+        // Render inventory data
+        renderInventory(data);
+      } catch (error) {
+        console.error("Error fetching inventory:", error);
+        alert("Something went wrong, please try again.");
+      }
+    } else {
+      // Render inventory from localStorage
+      renderInventory(inventory);
+    }
+  }
+
+  function renderInventory(inventory) {
+    const inventoryContainer = document.querySelector(".inventory_wrapper");
+
+    if (!inventoryContainer) {
+      console.error("Inventory container not found.");
+      return;
+    }
+
+    inventoryContainer.innerHTML = ""; // Clear previous content
+
+    inventory.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("inventory-item");
+      itemDiv.innerHTML = `
+        <strong>${item.nazwa}</strong> <br>
+        Ilość: ${item.ilosc} <br>
+        QR Code: ${item.qr_code}
+      `;
+      inventoryContainer.appendChild(itemDiv);
+    });
+  }
+
   function loadDashboard() {
     navBar.style.display = "flex";
     loadContent("start");
-    getUserInfo();
   }
 
   function loadContent(section, addToHistory = true) {
@@ -140,6 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (section === "start") {
           getUserInfo();
+        }
+
+        if (section === "magazyn") {
+          getInventory();
         }
 
         if (addToHistory) {

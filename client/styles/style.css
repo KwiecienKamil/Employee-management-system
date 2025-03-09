@@ -27,7 +27,7 @@ main {
   backdrop-filter: blur(10px);
   border-radius: 15px;
   border: 1px solid black;
-  padding: 0.3rem;
+  padding: .5rem;
 }
 
 .application_wrapper .main_dashboard {
@@ -41,7 +41,7 @@ main {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  padding: 1rem;
+  padding: 0 1rem 0 1rem;
 }
 
 .application_wrapper nav .logo {
@@ -60,7 +60,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0.5rem 1rem 1rem 1rem;
+  margin: 0 .5rem 0 .5rem;
 }
 
 .application_wrapper nav .logo p {
