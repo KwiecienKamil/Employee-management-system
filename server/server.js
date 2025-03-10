@@ -67,6 +67,18 @@ app.get("/getInventory", (req, res) => {
   });
 });
 
+app.get("/getEmployees", (req, res) => {
+  const sql =
+    "SELECT imie AS name, nazwisko AS surname, dzial AS department, email, stanowisko AS position FROM pracownicy";
+
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching employees:", err);
+      return res.status(500).json({ error: "Database query failed" });
+    }
+    return res.json(data);
+  });
+});
 
 app.listen(8081, () => {
   console.log("listening");

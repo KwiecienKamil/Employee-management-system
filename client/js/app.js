@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadLoginPage() {
     navBar.style.display = "none";
     mainDashboard.style.backgroundColor = "transparent";
+    mainDashboard.style.justifyContent = "center";
 
     fetch("pages/auth/login.html")
       .then((response) => response.text())
@@ -138,32 +139,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const data = await response.json();
-        console.log("Inventory Data:", data);
-
-        // Store data in localStorage
         localStorage.setItem("inventory", JSON.stringify(data));
-
-        // Render inventory data
         renderInventory(data);
       } catch (error) {
         console.error("Error fetching inventory:", error);
         alert("Something went wrong, please try again.");
       }
     } else {
-      // Render inventory from localStorage
       renderInventory(inventory);
     }
   }
 
   function renderInventory(inventory) {
     const inventoryContainer = document.querySelector(".inventory_wrapper");
-
-    if (!inventoryContainer) {
-      console.error("Inventory container not found.");
-      return;
-    }
-
-    inventoryContainer.innerHTML = ""; // Clear previous content
 
     inventory.forEach((item) => {
       const itemDiv = document.createElement("div");
@@ -174,6 +162,48 @@ document.addEventListener("DOMContentLoaded", function () {
         QR Code: ${item.qr_code}
       `;
       inventoryContainer.appendChild(itemDiv);
+    });
+  }
+
+  async function getEmployees() {
+    let employees = JSON.parse(localStorage.getItem("employees"));
+
+    if (!employees) {
+      try {
+        const response = await fetch("http://localhost:8081/getEmployees", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch employee data");
+        }
+
+        const data = await response.json();
+        localStorage.setItem("employees", JSON.stringify(data));
+        renderEmployees(data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        alert("Something went wrong, please try again.");
+      }
+    } else {
+      renderEmployees(employees);
+    }
+  }
+
+  function renderEmployees(employees) {
+    const employeesContainer = document.querySelector(".employees_wrapper");
+
+    employeesContainer.innerHTML = "";
+
+    employees.forEach((employee) => {
+      const employeeDiv = document.createElement("div");
+      employeeDiv.classList.add("employee-item");
+      employeeDiv.innerHTML = `
+        <strong>${employee.name} ${employee.surname}</strong> <br>
+        Position: ${employee.position} <br>
+      `;
+      employeesContainer.appendChild(employeeDiv);
     });
   }
 
@@ -202,6 +232,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (section === "magazyn") {
           getInventory();
+        }
+
+        if (section === "pracownicy") {
+          getEmployees();
         }
 
         if (addToHistory) {
