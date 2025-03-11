@@ -260,7 +260,7 @@ main {
 }
 .start-wrapper-card-wrapper {
   text-align: center;
-  padding: 1rem;
+  padding: 3rem;
   background: #fefefe;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -268,26 +268,34 @@ main {
 .start-wrapper-card-wrapper h5,
 .start-wrapper-card-wrapper h3 {
   font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 .time-inputs-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 1.5rem;
   margin-top: 1rem;
 }
 .time-inputs {
   display: flex;
   flex-direction: column;
   text-align: center;
+  gap: 0.5rem;
 }
 .time-inputs input {
   width: 2rem;
+  height: 2rem;
   font-size: 1.2rem;
   text-align: center;
 }
 #save-work-hours-btn {
   margin-top: 2rem;
-  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.5rem;
   margin-left: auto;
+  font-size: 0.9rem;
+  background-color: rgb(23, 206, 23);
+  color: white;
+  border: none;
+  cursor: pointer;
 }
