@@ -115,7 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mapped.forEach(([description, status]) => {
       const taskDiv = document.createElement("div");
-      taskDiv.innerHTML = `<strong>Opis:</strong> ${description} <br> <strong>Status:</strong> ${status}`;
+      taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
+      <span><strong>Status:</strong> ${status}</span>`;
       taskDiv.classList.add("task-item");
       loadTasks.appendChild(taskDiv);
     });
