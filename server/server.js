@@ -69,7 +69,7 @@ app.get("/getInventory", (req, res) => {
 
 app.get("/getEmployees", (req, res) => {
   const sql =
-    "SELECT imie AS name, nazwisko AS surname, dzial AS department, email, stanowisko AS position FROM pracownicy";
+    "SELECT imie AS name, nazwisko AS surname, dzial AS department, telefon as phone_number, stanowisko AS position FROM pracownicy";
 
   db.query(sql, (err, data) => {
     if (err) {

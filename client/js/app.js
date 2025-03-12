@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             stanowisko: data[0].stanowisko,
           })
         );
-        mainDashboard.style.background = "#FEFEFE";
+        mainDashboard.style.background = "linear-gradient(to bottom,rgba(255, 255, 255, 0.5) 0%,rgba(0, 0, 0, 0.5) 100%),radial-gradient(at 50% 0%,rgba(255, 255, 255, 0.1) 0%,rgba(0, 0, 0, 0.5) 50%)";
         mainDashboard.style.justifyContent = "start";
         loadDashboard();
       }
@@ -203,8 +203,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const employeeDiv = document.createElement("div");
       employeeDiv.classList.add("employee-item");
       employeeDiv.innerHTML = `
-        <strong>${employee.name} ${employee.surname}</strong> <br>
-        Position: ${employee.position} <br>
+        <h3>${employee.name} ${employee.surname}</h3>
+        <div>
+        <p>${employee.position}</p>
+        <p>${employee.phone_number}</p>
+        </div>
       `;
       employeesContainer.appendChild(employeeDiv);
     });

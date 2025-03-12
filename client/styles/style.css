@@ -260,7 +260,7 @@ main {
 }
 .start-wrapper-card-wrapper {
   text-align: center;
-  padding: 3rem;
+  padding: 2rem;
   background: #fefefe;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -311,7 +311,7 @@ main {
   padding-bottom: 1rem;
 }
 .inventory_wrapper {
-  max-height: 42rem;
+  max-height: 30rem;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -332,4 +332,9 @@ main {
   align-items: center;
   justify-content: space-between;
   margin-top: 0.5rem;
+}
+/* pracownicy.html */
+.employees_wrapper {
+  max-height: 30rem;
+  overflow-y: scroll;
 }
