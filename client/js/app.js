@@ -158,9 +158,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const itemDiv = document.createElement("div");
       itemDiv.classList.add("inventory-item");
       itemDiv.innerHTML = `
-        <strong>${item.nazwa}</strong> <br>
-        Ilość: ${item.ilosc} <br>
-        QR Code: ${item.qr_code}
+        <h5>${item.nazwa}</h5>
+        <div>
+        <p>Ilość: ${item.ilosc}</p>
+        <p>QR Code: ${item.qr_code}</p>
+        </div>
       `;
       inventoryContainer.appendChild(itemDiv);
     });

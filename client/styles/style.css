@@ -230,7 +230,7 @@ main {
 }
 /* Main content */
 
-/* Start.html */
+/* start.html */
 .my-tasks-wrapper {
   padding: 0.5rem;
   border: 1px solid black;
@@ -298,4 +298,38 @@ main {
   color: white;
   border: none;
   cursor: pointer;
+}
+/* magazyn.html */
+.warehouse-section {
+  background: #fefefe;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+  padding-top: 1rem;
+}
+.warehouse-section h2 {
+  padding-bottom: 1rem;
+}
+.inventory_wrapper {
+  max-height: 42rem;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+.inventory-item {
+  text-align: center;
+  border-top: 1px solid black;
+  padding: 0.5rem 1rem 0 1rem;
+}
+.inventory-item h5 {
+  font-size: 1.2rem;
+  text-align: center;
+}
+.inventory-item div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
 }
