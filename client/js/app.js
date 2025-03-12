@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
             stanowisko: data[0].stanowisko,
           })
         );
-        mainDashboard.style.background = "linear-gradient(to bottom,rgba(255, 255, 255, 0.5) 0%,rgba(0, 0, 0, 0.5) 100%),radial-gradient(at 50% 0%,rgba(255, 255, 255, 0.1) 0%,rgba(0, 0, 0, 0.5) 50%)";
+        mainDashboard.style.background =
+          "linear-gradient(to bottom,rgba(255, 255, 255, 0.5) 0%,rgba(0, 0, 0, 0.5) 100%),radial-gradient(at 50% 0%,rgba(255, 255, 255, 0.1) 0%,rgba(0, 0, 0, 0.5) 50%)";
         mainDashboard.style.justifyContent = "start";
         loadDashboard();
       }
@@ -103,24 +104,54 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    const mapped = userInfo.map((info) => {
-      return [info.task_description, info.task_status];
-    });
+    const mappedTasks = userInfo
+      .filter((info) => info.task_description) // Ensure only tasks with descriptions are mapped
+      .map((info) => [info.task_description, info.task_status]);
 
     const loadTasks = document.querySelector(".my-tasks");
     if (!loadTasks) {
       console.error("Element with class 'my-tasks' not found.");
-      return;
+    } else {
+      mappedTasks.forEach(([description, status]) => {
+        const taskDiv = document.createElement("div");
+        taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
+      <span><strong>Status:</strong> ${status}</span>`;
+        taskDiv.classList.add("task-item");
+        loadTasks.appendChild(taskDiv);
+      });
     }
 
-    mapped.forEach(([description, status]) => {
-      const taskDiv = document.createElement("div");
-      taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
-      <span><strong>Status:</strong> ${status}</span>`;
-      taskDiv.classList.add("task-item");
-      loadTasks.appendChild(taskDiv);
-    });
+    // Display work log details
+    const workLogContainer = document.querySelector(".work-log");
+    if (workLogContainer && userInfo[0].work_date) {
+      const { work_date, work_hours, work_end_time } = userInfo[0];
+      workLogContainer.innerHTML = `<p><strong>Data:</strong> ${work_date}</p>
+      <p><strong>Godziny pracy:</strong> ${work_hours}</p>
+      <p><strong>Koniec pracy:</strong> ${work_end_time || "Brak danych"}</p>`;
+    }
 
+    // Display damage reports
+    const damageReportsContainer = document.querySelector(".damage-reports");
+    if (damageReportsContainer) {
+      const mappedDamageReports = userInfo
+        .filter((info) => info.damage_product) // Filter out undefined values
+        .map((info) => [
+          info.damage_product,
+          info.damage_description,
+          info.damage_report_date,
+        ]);
+
+      mappedDamageReports.forEach(([product, description, date]) => {
+        const reportDiv = document.createElement("div");
+        reportDiv.innerHTML = `<p><strong>Produkt:</strong> ${product}</p> 
+      <p><strong>Opis:</strong> ${description}</p>
+      <p><strong>Data zgłoszenia:</strong> ${date}</p>`;
+        reportDiv.classList.add("damage-report-item");
+        damageReportsContainer.appendChild(reportDiv);
+      });
+    }
+
+    // Profile details
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
     profileUserPosition.textContent = user.stanowisko;
   }
@@ -199,18 +230,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     employeesContainer.innerHTML = "";
 
+    const table = document.createElement("table");
+    table.classList.add("employee-table");
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Imię Nazwisko</th>
+        <th>Stanowisko</th>
+        <th>Numer Telefonu</th>
+        <th>Działanie</th>
+      </tr>
+    `;
+
+    const tbody = document.createElement("tbody");
+
     employees.forEach((employee) => {
-      const employeeDiv = document.createElement("div");
-      employeeDiv.classList.add("employee-item");
-      employeeDiv.innerHTML = `
-        <h3>${employee.name} ${employee.surname}</h3>
-        <div>
-        <p>${employee.position}</p>
-        <p>${employee.phone_number}</p>
-        </div>
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${employee.name} ${employee.surname}</td>
+        <td>${employee.position}</td>
+        <td>${employee.phone_number}</td>
+         <td><button class="delete-btn" data-index="${employee.id}">Delete</button></td>
       `;
-      employeesContainer.appendChild(employeeDiv);
+      tbody.appendChild(row);
     });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    employeesContainer.appendChild(table);
   }
 
   function loadDashboard() {
