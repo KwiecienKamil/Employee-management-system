@@ -66,6 +66,13 @@ app.get("/getInventory", (req, res) => {
     return res.json(data);
   });
 });
+app.get("/getAnnouncements", (req, res) => {
+  const sql = "SELECT * FROM announcements";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
 
 app.get("/getEmployees", (req, res) => {
   const sql =

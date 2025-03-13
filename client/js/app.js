@@ -211,6 +211,49 @@ document.addEventListener("DOMContentLoaded", function () {
       damageReportsContainer.appendChild(itemDiv);
     });
   }
+  async function getAnnouncements() {
+    let announcements = JSON.parse(localStorage.getItem("announcements"));
+
+    if (!announcements) {
+      try {
+        const response = await fetch("http://localhost:8081/getAnnouncements", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch announcements data");
+        }
+
+        const data = await response.json();
+        localStorage.setItem("announcements", JSON.stringify(data));
+        renderAnnouncements(data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+        alert("Something went wrong, please try again.");
+      }
+    } else {
+      renderAnnouncements(announcements);
+    }
+  }
+
+  function renderAnnouncements(announcements) {
+    const announcementsContainer = document.querySelector(".announcements");
+
+    // Clear previous content to prevent duplicates
+    announcementsContainer.innerHTML = "";
+
+    announcements.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("announcement-item");
+      itemDiv.innerHTML = `
+        <h5>${item.tytul}</h5>
+        <p>${item.tresc}</p>
+        <p>Data dodania: ${item.data_dodania}</p>
+      `;
+      announcementsContainer.appendChild(itemDiv);
+    });
+  }
 
   async function getEmployees() {
     let employees = JSON.parse(localStorage.getItem("employees"));
@@ -295,6 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (section === "start") {
           getUserInfo();
+          getAnnouncements();
         }
 
         if (section === "magazyn") {

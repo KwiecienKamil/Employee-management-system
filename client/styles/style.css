@@ -310,7 +310,8 @@ main {
   text-align: center;
 }
 .inventory-wrapper,
-.damage-reports-wrapper {
+.damage-reports-wrapper,
+.announcements-wrapper {
   max-height: 30rem;
   overflow-y: scroll;
   display: flex;
@@ -320,6 +321,7 @@ main {
   background: #fefefe;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
 }
 .damage-reports-wrapper {
   font-size: 1.2rem;
