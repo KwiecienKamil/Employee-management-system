@@ -99,6 +99,64 @@ app.get("/getDamageReports", (req, res) => {
   });
 });
 
+app.post("/addDamageReport", (req, res) => {
+  const { user_id, produkt, opis, data_zgloszenia } = req.body;
+
+  if (!user_id || !produkt || !opis || !data_zgloszenia) {
+    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
+  }
+
+  db.query(
+    "INSERT INTO damage_reports (user_id, produkt, opis, data_zgloszenia) VALUES (?, ?, ?, ?)",
+    [user_id, produkt, opis, data_zgloszenia],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: "Błąd serwera" });
+      return res.json({ message: "Zgłoszenie dodane", id: result.insertId });
+    }
+  );
+});
+
+app.post("/addEmployee", (req, res) => {
+  const { imie, nazwisko, stanowisko, dzial, telefon, email, haslo } = req.body;
+
+  if (
+    !imie ||
+    !nazwisko ||
+    !stanowisko ||
+    !dzial ||
+    !telefon ||
+    !email ||
+    !haslo
+  ) {
+    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
+  }
+
+  db.query(
+    "INSERT INTO pracownicy (imie, nazwisko, stanowisko, dzial, telefon, email, haslo) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [imie, nazwisko, stanowisko, dzial, telefon, email, haslo],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: "Błąd serwera" });
+      return res.json({ message: "Pracownik dodany", id: result.insertId });
+    }
+  );
+});
+
+app.post("/addAnnouncement", (req, res) => {
+  const { tytul, tresc, data_dodania } = req.body;
+
+  if (!tytul || !tresc || !data_dodania) {
+    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
+  }
+
+  db.query(
+    "INSERT INTO announcements (tytul, tresc, data_dodania) VALUES (?, ?, ?)",
+    [tytul, tresc, data_dodania],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: "Błąd serwera" });
+      return res.json({ message: "Ogłoszenie dodane", id: result.insertId });
+    }
+  );
+});
 app.listen(8081, () => {
   console.log("listening");
 });
