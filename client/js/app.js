@@ -121,36 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Display work log details
-    const workLogContainer = document.querySelector(".work-log");
-    if (workLogContainer && userInfo[0].work_date) {
-      const { work_date, work_hours, work_end_time } = userInfo[0];
-      workLogContainer.innerHTML = `<p><strong>Data:</strong> ${work_date}</p>
-      <p><strong>Godziny pracy:</strong> ${work_hours}</p>
-      <p><strong>Koniec pracy:</strong> ${work_end_time || "Brak danych"}</p>`;
-    }
-
-    // Display damage reports
-    const damageReportsContainer = document.querySelector(".damage-reports");
-    if (damageReportsContainer) {
-      const mappedDamageReports = userInfo
-        .filter((info) => info.damage_product) // Filter out undefined values
-        .map((info) => [
-          info.damage_product,
-          info.damage_description,
-          info.damage_report_date,
-        ]);
-
-      mappedDamageReports.forEach(([product, description, date]) => {
-        const reportDiv = document.createElement("div");
-        reportDiv.innerHTML = `<p><strong>Produkt:</strong> ${product}</p> 
-      <p><strong>Opis:</strong> ${description}</p>
-      <p><strong>Data zgłoszenia:</strong> ${date}</p>`;
-        reportDiv.classList.add("damage-report-item");
-        damageReportsContainer.appendChild(reportDiv);
-      });
-    }
-
     // Profile details
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
     profileUserPosition.textContent = user.stanowisko;
@@ -183,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function renderInventory(inventory) {
-    const inventoryContainer = document.querySelector(".inventory_wrapper");
+    const inventoryContainer = document.querySelector(".inventory-wrapper");
 
     inventory.forEach((item) => {
       const itemDiv = document.createElement("div");
@@ -196,6 +166,49 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
       `;
       inventoryContainer.appendChild(itemDiv);
+    });
+  }
+
+  async function getDamageReports() {
+    let damageReports = JSON.parse(localStorage.getItem("damageReports"));
+
+    if (!damageReports) {
+      try {
+        const response = await fetch("http://localhost:8081/getDamageReports", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch damage reports data");
+        }
+
+        const data = await response.json();
+        localStorage.setItem("damageReports", JSON.stringify(data));
+        renderDamageReports(data);
+      } catch (error) {
+        console.error("Error fetching damage reports:", error);
+        alert("Something went wrong, please try again.");
+      }
+    } else {
+      renderDamageReports(damageReports);
+    }
+  }
+
+  function renderDamageReports(damageReports) {
+    const damageReportsContainer = document.querySelector(".damage-reports");
+
+    // Clear previous content to prevent duplicates
+    damageReportsContainer.innerHTML = "";
+
+    damageReports.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("damageReports-item");
+      itemDiv.innerHTML = `
+        <h5>Opis: ${item.opis}</h5>
+        <p>Data zgłoszenia: ${item.data_zgloszenia}</p>
+      `;
+      damageReportsContainer.appendChild(itemDiv);
     });
   }
 
@@ -286,6 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (section === "magazyn") {
           getInventory();
+          getDamageReports();
         }
 
         if (section === "pracownicy") {

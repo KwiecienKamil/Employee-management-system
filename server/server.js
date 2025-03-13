@@ -80,6 +80,18 @@ app.get("/getEmployees", (req, res) => {
   });
 });
 
+app.get("/getDamageReports", (req, res) => {
+  const sql = "SELECT * FROM damage_reports";
+
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching employees:", err);
+      return res.status(500).json({ error: "Database query failed" });
+    }
+    return res.json(data);
+  });
+});
+
 app.listen(8081, () => {
   console.log("listening");
 });
