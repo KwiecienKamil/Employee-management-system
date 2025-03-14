@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
       itemDiv.classList.add("damageReports-item");
       itemDiv.innerHTML = `
         <h5>Opis: ${item.opis}</h5>
-        <p>Data zgłoszenia: ${item.data_zgloszenia}</p>
+        <p>Data zgłoszenia: ${item.data_zgloszenia.split("T")[0]}</p>
       `;
       damageReportsContainer.appendChild(itemDiv);
     });
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
       itemDiv.innerHTML = `
         <h5>${item.tytul}</h5>
         <p>${item.tresc}</p>
-        <p>Data dodania: ${item.data_dodania}</p>
+        <p>Data dodania: ${item.data_dodania.split("T")[0]}</p>
       `;
       announcementsContainer.appendChild(itemDiv);
     });

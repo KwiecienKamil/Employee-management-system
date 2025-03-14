@@ -100,9 +100,10 @@ app.get("/getDamageReports", (req, res) => {
 });
 
 app.post("/addDamageReport", (req, res) => {
-  const { user_id, produkt, opis, data_zgloszenia } = req.body;
+  const { user_id, produkt, opis } = req.body;
+  const data_zgloszenia = new Date().toISOString().slice(0, 10); // Set date on the server
 
-  if (!user_id || !produkt || !opis || !data_zgloszenia) {
+  if (!user_id || !produkt || !opis) {
     return res.status(400).json({ message: "Wszystkie pola są wymagane" });
   }
 
@@ -142,21 +143,26 @@ app.post("/addEmployee", (req, res) => {
 });
 
 app.post("/addAnnouncement", (req, res) => {
-  const { tytul, tresc, data_dodania } = req.body;
-
-  if (!tytul || !tresc || !data_dodania) {
-    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
-  }
+  const { title, content } = req.body;
+  const data_dodania = new Date().toISOString().slice(0, 10);
 
   db.query(
     "INSERT INTO announcements (tytul, tresc, data_dodania) VALUES (?, ?, ?)",
-    [tytul, tresc, data_dodania],
+    [title, content, data_dodania],
     (err, result) => {
-      if (err) return res.status(500).json({ error: "Błąd serwera" });
-      return res.json({ message: "Ogłoszenie dodane", id: result.insertId });
+      if (err) {
+        return res.send({ err: err });
+      }
+
+      if (result.length > 0) {
+        return res.send(result);
+      } else {
+        return res.send({ message: "Something went wrong" });
+      }
     }
   );
 });
+
 app.listen(8081, () => {
   console.log("listening");
 });
