@@ -350,6 +350,10 @@ document.addEventListener("DOMContentLoaded", function () {
           getEmployees();
         }
 
+        if (section === "operacje") {
+          loadActions();
+        }
+
         if (addToHistory) {
           history.pushState({ section }, "", `?page=${section}`);
         }
@@ -368,6 +372,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
+  async function loadActions() {
+    const announcementBtn = document.getElementById("announcement-btn");
+  
+      
+  }
   /*** 🔹 Event Listeners ***/
 
   navLinks.forEach((link) => {
