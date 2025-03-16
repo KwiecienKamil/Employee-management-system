@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const profileUserPosition = document.querySelector(".profile_user_info p");
 
   /*** 🔹 Authentication Functions ***/
-
   const isLoggedIn = () => localStorage.getItem("loggedInUser") !== null;
 
   function loadLoginPage() {
@@ -198,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderDamageReports(damageReports) {
     const damageReportsContainer = document.querySelector(".damage-reports");
 
-    // Clear previous content to prevent duplicates
     damageReportsContainer.innerHTML = "";
 
     damageReports.forEach((item) => {
@@ -339,6 +337,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (section === "start") {
           getUserInfo();
           getAnnouncements();
+          getInventory();
+          getDamageReports();
         }
 
         if (section === "magazyn") {
@@ -375,8 +375,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function loadActions() {
     const announcementBtn = document.getElementById("announcement-btn");
-  
-      
+    
+    
   }
   /*** 🔹 Event Listeners ***/
 

@@ -1,6 +1,6 @@
 <div class="warehouse-section">
   <div class="form-container">
-    <div id="announcement-form" class="announcement-form">
+    <div class="announcement-form">
       <h3>Dodaj Ogłoszenie</h3>
       <input type="text" id="title" placeholder="Tytuł" required />
       <textarea id="content" placeholder="Treść ogłoszenia" required></textarea>
@@ -8,25 +8,21 @@
     </div>
   </div>
   <div class="form-container">
-    <form id="employee-form" class="styled-form">
-      <h3>Dodaj Pracownika</h3>
-      <input
-        type="text"
-        id="employee-name"
-        placeholder="Imię i Nazwisko"
-        required
-      />
-      <input
-        type="text"
-        id="employee-position"
-        placeholder="Stanowisko"
-        required
-      />
-      <button type="submit">Dodaj Pracownika</button>
-    </form>
+    <div class="styled-form">
+      <label for="warehouseName">Nazwa magazynu:</label>
+      <input type="text" id="warehouseName" required />
+      
+      <label for="warehouseLocation">Lokalizacja:</label>
+      <input type="text" id="warehouseLocation" required />
+    
+      <label for="warehouseSize">Powierzchnia (m²):</label>
+      <input type="number" id="warehouseSize" required />
+    
+      <button type="submit" id="warehouse-btn">Dodaj przestrzeń</button>
+    </div>
   </div>
   <div class="form-container">
-    <form id="issue-form" class="styled-form">
+    <div class="styled-form">
       <h3>Zgłoś Problem</h3>
       <input
         type="text"
@@ -39,7 +35,7 @@
         placeholder="Opis Problemu"
         required
       ></textarea>
-      <button type="submit">Zgłoś</button>
-    </form>
+      <button id="issue-btn" type="submit">Zgłoś</button>
+    </div>
   </div>
 </div>
