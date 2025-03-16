@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     navBar.style.display = "none";
     mainDashboard.style.backgroundColor = "transparent";
     mainDashboard.style.justifyContent = "center";
-
+    mainDashboard.style.maxWidth = "100%"
     fetch("pages/auth/login.html")
       .then((response) => response.text())
       .then((html) => {
@@ -103,22 +103,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    const mappedTasks = userInfo
-      .filter((info) => info.task_description) // Ensure only tasks with descriptions are mapped
-      .map((info) => [info.task_description, info.task_status]);
+    // const mappedTasks = userInfo
+    //   .filter((info) => info.task_description) // Ensure only tasks with descriptions are mapped
+    //   .map((info) => [info.task_description, info.task_status]);
 
-    const loadTasks = document.querySelector(".my-tasks");
-    if (!loadTasks) {
-      console.error("Element with class 'my-tasks' not found.");
-    } else {
-      mappedTasks.forEach(([description, status]) => {
-        const taskDiv = document.createElement("div");
-        taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
-      <span><strong>Status:</strong> ${status}</span>`;
-        taskDiv.classList.add("task-item");
-        loadTasks.appendChild(taskDiv);
-      });
-    }
+    // const loadTasks = document.querySelector(".my-tasks");
+    // if (!loadTasks) {
+    //   console.error("Element with class 'my-tasks' not found.");
+    // } else {
+    //   mappedTasks.forEach(([description, status]) => {
+    //     const taskDiv = document.createElement("div");
+    //     taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
+    //   <span><strong>Status:</strong> ${status}</span>`;
+    //     taskDiv.classList.add("task-item");
+    //     loadTasks.appendChild(taskDiv);
+    //   });
+    // }
 
     // Profile details
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
@@ -211,8 +211,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   async function getAnnouncements() {
     let announcements = JSON.parse(localStorage.getItem("announcements"));
-
-    if (!announcements) {
       try {
         const response = await fetch("http://localhost:8081/getAnnouncements", {
           method: "GET",
@@ -222,7 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!response.ok) {
           throw new Error("Failed to fetch announcements data");
         }
-
         const data = await response.json();
         localStorage.setItem("announcements", JSON.stringify(data));
         renderAnnouncements(data);
@@ -230,9 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error fetching announcements:", error);
         alert("Something went wrong, please try again.");
       }
-    } else {
       renderAnnouncements(announcements);
-    }
   }
 
   function renderAnnouncements(announcements) {
@@ -251,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       announcementsContainer.appendChild(itemDiv);
     });
+
   }
 
   async function getEmployees() {
@@ -293,7 +289,6 @@ document.addEventListener("DOMContentLoaded", function () {
         <th>Imię Nazwisko</th>
         <th>Stanowisko</th>
         <th>Numer Telefonu</th>
-        <th>Działanie</th>
       </tr>
     `;
 
@@ -305,7 +300,6 @@ document.addEventListener("DOMContentLoaded", function () {
         <td>${employee.name} ${employee.surname}</td>
         <td>${employee.position}</td>
         <td>${employee.phone_number}</td>
-         <td><button class="delete-btn" data-index="${employee.id}">Delete</button></td>
       `;
       tbody.appendChild(row);
     });
@@ -337,8 +331,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (section === "start") {
           getUserInfo();
           getAnnouncements();
-          getInventory();
-          getDamageReports();
         }
 
         if (section === "magazyn") {
@@ -375,8 +367,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function loadActions() {
     const announcementBtn = document.getElementById("announcement-btn");
+    const warehouseBtn = document.getElementById("warehouse-btn");
+    const issuesBtn = document.getElementById("issue-bt");
     
+    announcementBtn.addEventListener("click", () => {
+      addAnnouncement()
+    }) 
+    warehouseBtn.addEventListener("click", () => {
+      addWarehouseSpace()
+    }) 
+    issuesBtn.addEventListener("click", () => {
+      addIssue()
+    }) 
+  }
+
+  async function addAnnouncement() {
+    const title = document.getElementById("title")?.value;
+    const content = document.getElementById("content")?.value;
     
+    try {
+      const response = await fetch("http://localhost:8081/addAnnouncement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content }),
+      });
+      alert("Dodano ogłoszenie");
+      loadContent("start");
+    } catch (error) {
+      alert("Error adding announcement");
+    }
+  }
+
+  async function addWarehouseSpace() {
+    const warehouseName = document.getElementById("warehouseName")?.value;
+    const warehouseSize = document.getElementById("warehouseSize")?.value;
+    
+    try {
+      const response = await fetch("http://localhost:8081/addWarehouseSpace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ warehouseName, warehouseSize }),
+      });
+      alert("Dodano przestrzeń")
+    } catch (error) {
+      alert("Error adding announcement");
+    }
   }
   /*** 🔹 Event Listeners ***/
 
