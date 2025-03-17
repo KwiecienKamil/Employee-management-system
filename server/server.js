@@ -163,6 +163,25 @@ app.post("/addAnnouncement", (req, res) => {
   );
 });
 
+app.post("/addWarehouseSpace", (req, res) => {
+  const { warehouseName, warehouseSize, warehouseContent } = req.body;
+
+  db.query(
+    "INSERT INTO warehouse_space (warehouseName, warehouseSize, warehouseContent) VALUES (?, ?, ?)",
+    [warehouseName, warehouseSize, warehouseContent],
+    (err, result) => {
+      if (err) {
+        return res.send({ err: err });
+      }
+      if (result.length > 0) {
+        return res.send(result);
+      } else {
+        return res.send({ message: "Something went wrong" });
+      }
+    }
+  );
+});
+
 app.listen(8081, () => {
   console.log("listening");
 });

@@ -407,16 +407,21 @@ document.addEventListener("DOMContentLoaded", function () {
   async function addWarehouseSpace() {
     const warehouseName = document.getElementById("warehouseName")?.value;
     const warehouseSize = document.getElementById("warehouseSize")?.value;
+    const warehouseContent = document.getElementById("warehouseContent")?.value;
     
     try {
       const response = await fetch("http://localhost:8081/addWarehouseSpace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ warehouseName, warehouseSize }),
+        body: JSON.stringify({ warehouseName, warehouseSize, warehouseContent }),
       });
-      alert("Dodano przestrzeń")
+      alert("Dodano przestrzeń");
+      setTimeout(() => {
+        window.location.reload();
+      },1000);
+      loadContent("magazyn");
     } catch (error) {
-      alert("Error adding announcement");
+      alert("Error adding warehouse space");
     }
   }
   /*** 🔹 Event Listeners ***/
