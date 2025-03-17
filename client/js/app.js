@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function logoutUser() {
-    localStorage.removeItem("loggedInUser");
+    localStorage.clear();
     loadLoginPage();
   }
 
@@ -210,25 +210,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
   async function getAnnouncements() {
-    let announcements = JSON.parse(localStorage.getItem("announcements"));
-      try {
-        const response = await fetch("http://localhost:8081/getAnnouncements", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch announcements data");
-        }
-        const data = await response.json();
-        localStorage.setItem("announcements", JSON.stringify(data));
-        renderAnnouncements(data);
-      } catch (error) {
-        console.error("Error fetching announcements:", error);
-        alert("Something went wrong, please try again.");
+    let announcements = JSON.parse(localStorage.getItem("announcements")) || [];  // Default to empty array if nothing in localStorage
+    renderAnnouncements(announcements);
+  
+    try {
+      const response = await fetch("http://localhost:8081/getAnnouncements", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch announcements data");
       }
-      renderAnnouncements(announcements);
+  
+      const data = await response.json();
+      localStorage.setItem("announcements", JSON.stringify(data));  // Update localStorage with new data
+      renderAnnouncements(data);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+      alert("Something went wrong, please try again.");
+    }
   }
+  
 
   function renderAnnouncements(announcements) {
     const announcementsContainer = document.querySelector(".announcements");
@@ -392,6 +395,9 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify({ title, content }),
       });
       alert("Dodano ogłoszenie");
+      setTimeout(() => {
+        window.location.reload();
+      },1000);
       loadContent("start");
     } catch (error) {
       alert("Error adding announcement");
