@@ -379,9 +379,9 @@ document.addEventListener("DOMContentLoaded", function () {
     warehouseBtn.addEventListener("click", () => {
       addWarehouseSpace()
     }) 
-    issuesBtn.addEventListener("click", () => {
-      addIssue()
-    }) 
+    // issuesBtn.addEventListener("click", () => {
+    //   addIssue()
+    // }) 
   }
 
   async function addAnnouncement() {
@@ -409,11 +409,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const warehouseSize = document.getElementById("warehouseSize")?.value;
     const warehouseContent = document.getElementById("warehouseContent")?.value;
     
-    try {
+    try { 
       const response = await fetch("http://localhost:8081/addWarehouseSpace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ warehouseName, warehouseSize, warehouseContent }),
+        body: JSON.stringify({ warehouseName, warehouseSize: warehouseSizeToFixed, warehouseContent }),
       });
       alert("Dodano przestrzeń");
       setTimeout(() => {
