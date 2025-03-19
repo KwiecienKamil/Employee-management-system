@@ -171,7 +171,6 @@ document.addEventListener("DOMContentLoaded", function () {
   async function getDamageReports() {
     let damageReports = JSON.parse(localStorage.getItem("damageReports"));
 
-    if (!damageReports) {
       try {
         const response = await fetch("http://localhost:8081/getDamageReports", {
           method: "GET",
@@ -189,9 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error fetching damage reports:", error);
         alert("Something went wrong, please try again.");
       }
-    } else {
-      renderDamageReports(damageReports);
-    }
   }
 
   function renderDamageReports(damageReports) {
@@ -209,6 +205,48 @@ document.addEventListener("DOMContentLoaded", function () {
       damageReportsContainer.appendChild(itemDiv);
     });
   }
+
+  async function getWarehouseSpace() {
+  
+    try {
+      const response = await fetch("http://localhost:8081/getWarehouseSpace", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch announcements data");
+      }
+  
+      const data = await response.json();
+      localStorage.setItem("announcements", JSON.stringify(data));  // Update localStorage with new data
+      renderAnnouncements(data);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+      alert("Something went wrong, please try again.");
+    }
+  }
+  
+
+  function renderAnnouncements(announcements) {
+    const announcementsContainer = document.querySelector(".announcements");
+
+    // Clear previous content to prevent duplicates
+    announcementsContainer.innerHTML = "";
+
+    announcements.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("announcement-item");
+      itemDiv.innerHTML = `
+        <h5>${item.tytul}</h5>
+        <p>${item.tresc}</p>
+        <p>Data dodania: ${item.data_dodania.split("T")[0]}</p>
+      `;
+      announcementsContainer.appendChild(itemDiv);
+    });
+
+  }
+
   async function getAnnouncements() {
     let announcements = JSON.parse(localStorage.getItem("announcements")) || [];  // Default to empty array if nothing in localStorage
     renderAnnouncements(announcements);
@@ -334,6 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (section === "start") {
           getUserInfo();
           getAnnouncements();
+          getWarehouseSpace();
         }
 
         if (section === "magazyn") {
@@ -435,9 +474,10 @@ document.addEventListener("DOMContentLoaded", function () {
         body: JSON.stringify({ issueTitle, issueDescription }),
       });
       alert("Zgłoszono problem");
-      setTimeout(() => {
         window.location.reload();
-      },1000);
+      setTimeout(() => {
+        loadContent("magazyn")
+      }, 1000);
     } catch (error) {
       alert("Error adding issue");
     }

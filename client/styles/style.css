@@ -408,6 +408,8 @@ main {
 }
 .damage-reports-wrapper {
   font-size: 1.2rem;
+  padding: 1rem;
+  max-height: 450px;
 }
 .inventory-item {
   text-align: center;
