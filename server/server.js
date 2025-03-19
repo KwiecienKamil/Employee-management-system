@@ -99,23 +99,6 @@ app.get("/getDamageReports", (req, res) => {
   });
 });
 
-app.post("/addDamageReport", (req, res) => {
-  const { user_id, produkt, opis } = req.body;
-  const data_zgloszenia = new Date().toISOString().slice(0, 10); // Set date on the server
-
-  if (!user_id || !produkt || !opis) {
-    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
-  }
-
-  db.query(
-    "INSERT INTO damage_reports (user_id, produkt, opis, data_zgloszenia) VALUES (?, ?, ?, ?)",
-    [user_id, produkt, opis, data_zgloszenia],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: "Błąd serwera" });
-      return res.json({ message: "Zgłoszenie dodane", id: result.insertId });
-    }
-  );
-});
 
 app.post("/addEmployee", (req, res) => {
   const { imie, nazwisko, stanowisko, dzial, telefon, email, haslo } = req.body;
@@ -167,8 +150,27 @@ app.post("/addWarehouseSpace", (req, res) => {
   const { warehouseName, warehouseSize, warehouseContent } = req.body;
 
   db.query(
-    "INSERT INTO warehouse_space (warehouseName, warehouseSize, warehouseContent) VALUES (?, ?, ?)",
+    "INSERT INTO warehouse_space (item_name, allocated_capacity, description) VALUES (?, ?, ?)",
     [warehouseName, warehouseSize, warehouseContent],
+    (err, result) => {
+      if (err) {
+        return res.send({ err: err });
+      }
+      if (result.length > 0) {
+        return res.send(result);
+      } else {
+        return res.send({ message: "Something went wrong" });
+      }
+    }
+  );
+});
+
+app.post("/addDamageReport", (req, res) => {
+  const { issueTitle, issueDescription } = req.body;
+  const issueDate = new Date().toISOString().slice(0, 10);
+  db.query(
+    "INSERT INTO damage_reports (user_id, produkt, opis, data_zgloszenia) VALUES (?, ?, ?, ?)",
+    [1, issueTitle, issueDescription, issueDate],
     (err, result) => {
       if (err) {
         return res.send({ err: err });

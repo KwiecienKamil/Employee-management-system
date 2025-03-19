@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
   async function loadActions() {
     const announcementBtn = document.getElementById("announcement-btn");
     const warehouseBtn = document.getElementById("warehouse-btn");
-    const issuesBtn = document.getElementById("issue-bt");
+    const issuesBtn = document.getElementById("issue-btn");
     
     announcementBtn.addEventListener("click", () => {
       addAnnouncement()
@@ -379,9 +379,9 @@ document.addEventListener("DOMContentLoaded", function () {
     warehouseBtn.addEventListener("click", () => {
       addWarehouseSpace()
     }) 
-    // issuesBtn.addEventListener("click", () => {
-    //   addIssue()
-    // }) 
+    issuesBtn.addEventListener("click", () => {
+      addDamageReport()
+    }) 
   }
 
   async function addAnnouncement() {
@@ -408,20 +408,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const warehouseName = document.getElementById("warehouseName")?.value;
     const warehouseSize = document.getElementById("warehouseSize")?.value;
     const warehouseContent = document.getElementById("warehouseContent")?.value;
-    
+
     try { 
       const response = await fetch("http://localhost:8081/addWarehouseSpace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ warehouseName, warehouseSize: warehouseSizeToFixed, warehouseContent }),
+        body: JSON.stringify({ warehouseName, warehouseSize, warehouseContent }),
       });
       alert("Dodano przestrzeń");
       setTimeout(() => {
         window.location.reload();
       },1000);
-      loadContent("magazyn");
     } catch (error) {
       alert("Error adding warehouse space");
+    }
+  }
+
+  async function addDamageReport() {
+    const issueTitle = document.getElementById("issue-title")?.value;
+    const issueDescription = document.getElementById("issue-description")?.value;
+    
+    try { 
+      const response = await fetch("http://localhost:8081/addDamageReport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ issueTitle, issueDescription }),
+      });
+      alert("Zgłoszono problem");
+      setTimeout(() => {
+        window.location.reload();
+      },1000);
+    } catch (error) {
+      alert("Error adding issue");
     }
   }
   /*** 🔹 Event Listeners ***/
