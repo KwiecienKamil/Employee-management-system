@@ -103,23 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // const mappedTasks = userInfo
-    //   .filter((info) => info.task_description) // Ensure only tasks with descriptions are mapped
-    //   .map((info) => [info.task_description, info.task_status]);
-
-    // const loadTasks = document.querySelector(".my-tasks");
-    // if (!loadTasks) {
-    //   console.error("Element with class 'my-tasks' not found.");
-    // } else {
-    //   mappedTasks.forEach(([description, status]) => {
-    //     const taskDiv = document.createElement("div");
-    //     taskDiv.innerHTML = `<p><strong>Opis:</strong> ${description}</p> 
-    //   <span><strong>Status:</strong> ${status}</span>`;
-    //     taskDiv.classList.add("task-item");
-    //     loadTasks.appendChild(taskDiv);
-    //   });
-    // }
-
     // Profile details
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
     profileUserPosition.textContent = user.stanowisko;
@@ -149,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       renderInventory(inventory);
     }
+    renderInfo();
   }
 
   function renderInventory(inventory) {
@@ -207,7 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function getWarehouseSpace() {
-  
     try {
       const response = await fetch("http://localhost:8081/getWarehouseSpace", {
         method: "GET",
@@ -219,13 +202,13 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   
       const data = await response.json();
-      localStorage.setItem("announcements", JSON.stringify(data));  // Update localStorage with new data
-      renderAnnouncements(data);
+      localStorage.setItem("warehouseSpace", JSON.stringify(data));  // Update localStorage with new data
     } catch (error) {
       console.error("Error fetching announcements:", error);
       alert("Something went wrong, please try again.");
     }
   }
+  
   
 
   function renderAnnouncements(announcements) {
@@ -244,13 +227,9 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       announcementsContainer.appendChild(itemDiv);
     });
-
   }
 
   async function getAnnouncements() {
-    let announcements = JSON.parse(localStorage.getItem("announcements")) || [];  // Default to empty array if nothing in localStorage
-    renderAnnouncements(announcements);
-  
     try {
       const response = await fetch("http://localhost:8081/getAnnouncements", {
         method: "GET",
@@ -260,7 +239,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) {
         throw new Error("Failed to fetch announcements data");
       }
-  
       const data = await response.json();
       localStorage.setItem("announcements", JSON.stringify(data));  // Update localStorage with new data
       renderAnnouncements(data);
@@ -268,6 +246,27 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error fetching announcements:", error);
       alert("Something went wrong, please try again.");
     }
+  }
+
+  function renderInfo() {
+    const warehouseSpaceInfo = JSON.parse(localStorage.getItem("warehouseSpace"));
+    const inventoryInfo = JSON.parse(localStorage.getItem("inventory"));
+    
+    const spaceBtn = document.getElementById("warehouse-space")
+    const itemBtn = document.getElementById("most-items-in-warehouse")
+    
+    let totalAllocatedCapacity = 0;
+
+    const mostItemsInInventory = inventoryInfo.reduce((maxItem, item) => {
+      return item.ilosc > maxItem.ilosc ? item : maxItem;
+    }, inventoryInfo[0]); 
+    totalAllocatedCapacity = warehouseSpaceInfo.reduce((sum, item) => 
+      sum + parseFloat(item.allocated_capacity || 0), 0
+  );
+
+   
+      itemBtn.textContent = `${mostItemsInInventory.nazwa}, Ilość: ${mostItemsInInventory.ilosc}`;
+      spaceBtn.textContent = `${(50 - totalAllocatedCapacity).toFixed(2)} m²`;
   }
   
 
@@ -373,13 +372,13 @@ document.addEventListener("DOMContentLoaded", function () {
           getUserInfo();
           getAnnouncements();
           getWarehouseSpace();
-        }
-
-        if (section === "magazyn") {
-          getInventory();
           getDamageReports();
         }
-
+        
+        if (section === "magazyn") {
+          getInventory();
+        }
+        
         if (section === "pracownicy") {
           getEmployees();
         }

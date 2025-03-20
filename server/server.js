@@ -100,30 +100,14 @@ app.get("/getDamageReports", (req, res) => {
 });
 
 
-app.post("/addEmployee", (req, res) => {
-  const { imie, nazwisko, stanowisko, dzial, telefon, email, haslo } = req.body;
-
-  if (
-    !imie ||
-    !nazwisko ||
-    !stanowisko ||
-    !dzial ||
-    !telefon ||
-    !email ||
-    !haslo
-  ) {
-    return res.status(400).json({ message: "Wszystkie pola są wymagane" });
-  }
-
-  db.query(
-    "INSERT INTO pracownicy (imie, nazwisko, stanowisko, dzial, telefon, email, haslo) VALUES (?, ?, ?, ?, ?, ?, ?)",
-    [imie, nazwisko, stanowisko, dzial, telefon, email, haslo],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: "Błąd serwera" });
-      return res.json({ message: "Pracownik dodany", id: result.insertId });
-    }
-  );
+app.get("/getWarehouseSpace", (req, res) => {
+  const sql = "SELECT * FROM warehouse_space";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
 });
+
 
 app.post("/addAnnouncement", (req, res) => {
   const { title, content } = req.body;
