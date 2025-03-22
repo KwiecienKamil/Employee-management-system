@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     mainDashboard.style.backgroundColor = "transparent";
     mainDashboard.style.justifyContent = "center";
     mainDashboard.style.maxWidth = "100%"
+    mainDashboard.style.borderRadius = "10px"
     fetch("pages/auth/login.html")
       .then((response) => response.text())
       .then((html) => {
@@ -72,9 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.clear();
     loadLoginPage();
   }
-
   /*** 🔹 Dashboard & Navigation ***/
-
   async function getUserInfo() {
     const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
@@ -181,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     damageReports.forEach((item) => {
       const itemDiv = document.createElement("div");
-      itemDiv.classList.add("damageReports-item");
+      itemDiv.classList.add("announcement-item");
       itemDiv.innerHTML = `
         <h5>Opis: ${item.opis}</h5>
         <p>Data zgłoszenia: ${item.data_zgloszenia.split("T")[0]}</p>
@@ -351,6 +350,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadDashboard() {
     navBar.style.display = "flex";
+    mainDashboard.style.borderRadius = "0px"
+    mainDashboard.style.borderBottomRightRadius = "10px";
+    mainDashboard.style.borderTopRightRadius = "10px";
     loadContent("start");
   }
 
