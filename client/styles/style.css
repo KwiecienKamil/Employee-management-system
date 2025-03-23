@@ -398,6 +398,7 @@ main {
 .inventory-wrapper,
 .damage-reports-wrapper,
 .announcements-wrapper {
+  min-width: 25rem;
   max-height: 30rem;
   overflow-y: scroll;
   display: flex;
