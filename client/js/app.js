@@ -102,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Profile details
     profileUserName.textContent = `${user.imie} ${user.nazwisko}`;
     profileUserPosition.textContent = user.stanowisko;
   }
@@ -272,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderAnnouncements(announcements) {
     const announcementsContainer = document.querySelector(".announcements");
 
-    // Clear previous content to prevent duplicates
+    
     announcementsContainer.innerHTML = "";
 
     announcements.forEach((item) => {
