@@ -136,18 +136,44 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderInventory(inventory) {
     const inventoryContainer = document.querySelector(".inventory-wrapper");
 
-    inventory.forEach((item) => {
+    inventory.forEach((item, index) => {
       const itemDiv = document.createElement("div");
       itemDiv.classList.add("inventory-item");
       itemDiv.innerHTML = `
         <h5>${item.nazwa}</h5>
         <div>
-        <p>Ilość: ${item.ilosc}</p>
-        <p>QR Code: ${item.qr_code}</p>
+          <p>Ilość: ${item.ilosc}</p>
+          <p>QR Code: ${item.qr_code}</p>
+          <button onclick="removeItem(${index})">Usuń</button>
         </div>
       `;
       inventoryContainer.appendChild(itemDiv);
     });
+  }
+
+  function removeItem(index) {
+    let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+  
+    if (index < 0 || index >= inventory.length) return; // Prevent invalid index
+  
+    const removedItem = inventory.splice(index, 1)[0]; // Remove item and store it
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+    renderInventory(inventory);
+  
+    try {
+      const response = await fetch("http://localhost:8081/removeItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: removedItem.id }), // Send item's ID instead of index
+      });
+  
+      const data = await response.json();
+      if (data.message) alert(data.message);
+    } catch (error) {
+      console.error("Error removing item:", error);
+      alert("Something went wrong, please try again.");
+    }
+
   }
 
   async function getDamageReports() {

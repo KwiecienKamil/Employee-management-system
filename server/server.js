@@ -168,6 +168,25 @@ app.post("/addDamageReport", (req, res) => {
   );
 });
 
+
+app.post("/removeItem", (req, res) => {
+  const { id } = req.body;
+  db.query(
+    "Delete FROM inventory WHERE id = ?",
+    [id],
+    (err, result) => {
+      if (err) {
+        return res.send({ err: err });
+      }
+      if (result.length > 0) {
+        return res.send(result);
+      } else {
+        return res.send({ message: "Something went wrong" });
+      }
+    }
+  );
+});
+
 app.listen(8081, () => {
   console.log("listening");
 });
