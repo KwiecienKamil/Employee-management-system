@@ -520,3 +520,15 @@ main {
 #deleteBtn:hover {
   filter: brightness(80%);
 }
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sort-container button {
+  padding: .2rem .4rem .2rem .4rem;
+  border: 1px solid black;
+  cursor: pointer;
+}
