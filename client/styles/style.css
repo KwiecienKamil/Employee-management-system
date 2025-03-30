@@ -508,3 +508,15 @@ main {
   background-color: #fff;
   border-radius: 10px;
 }
+
+#deleteBtn {
+  padding: .3rem .5rem .3rem .5rem;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: .3s;
+}
+#deleteBtn:hover {
+  filter: brightness(80%);
+}
