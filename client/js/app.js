@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
   async function getInventory() {
     let inventory = JSON.parse(localStorage.getItem("inventory"));
 
+    
     if (!inventory) {
       try {
         const response = await fetch("http://localhost:8081/getInventory", {
@@ -132,25 +133,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     renderInfo();
   }
-
+  
+  window.sortInventory = function (criterium) {
+    let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+  
+    if (criterium === "nazwa") {
+      inventory.sort((a, b) => a.nazwa.localeCompare(b.nazwa)); // Sorting alphabetically
+    } else if (criterium === "ilosc") {
+      inventory.sort((a, b) => b.ilosc - a.ilosc); // Sorting by quantity (descending)
+    }
+  
+    localStorage.setItem("inventory", JSON.stringify(inventory)); // Update localStorage
+    const inventoryContainer = document.querySelector(".inventory-wrapper");
+    inventoryContainer.innerHTML = ""; // Clear existing inventory display
+    renderInventory(inventory); // Render sorted inventory
+    loadContent("magazyn"); // Refresh content
+    };
   
 
   function renderInventory(inventory) {
     const inventoryContainer = document.querySelector(".inventory-wrapper");
-
-    inventory.forEach((item, index) => {
-      const itemDiv = document.createElement("div");
-      itemDiv.classList.add("inventory-item");
-      itemDiv.innerHTML = `
-        <h5>${item.nazwa}</h5>
-        <div>
-          <p>Ilość: ${item.ilosc}</p>
-          <p>QR Code: ${item.qr_code}</p>
-          <button onclick="removeItem(${item.id})" id="deleteBtn">Usuń</button>
-        </div>
-      `;
-      inventoryContainer.appendChild(itemDiv);
-    });
+  
+      inventory.forEach((item) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("inventory-item");
+        itemDiv.innerHTML = `
+          <h5>${item.nazwa}</h5>
+          <div>
+            <p>Ilość: ${item.ilosc}</p>
+            <p>QR Code: ${item.qr_code}</p>
+            <button onclick="removeItem(${item.id})" id="deleteBtn">Usuń</button>
+          </div>
+        `;
+        inventoryContainer.appendChild(itemDiv);
+      });
   }
 
   window.removeItem = async function (id) {
