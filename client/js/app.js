@@ -455,6 +455,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const announcementBtn = document.getElementById("announcement-btn");
     const warehouseBtn = document.getElementById("warehouse-btn");
     const issuesBtn = document.getElementById("issue-btn");
+    const addItemBtn = document.getElementById("addItemButton");
     
     announcementBtn.addEventListener("click", () => {
       addAnnouncement()
@@ -464,6 +465,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }) 
     issuesBtn.addEventListener("click", () => {
       addDamageReport()
+    }) 
+     addItemBtn.addEventListener("click", () => {
+      addItem();
+      
     }) 
   }
 
@@ -524,6 +529,27 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 1000);
     } catch (error) {
       alert("Error adding issue");
+    }
+  }
+
+   async function addItem() {
+    const ItemName = document.getElementById("item-name")?.value;
+    const ItemQR = document.getElementById("item-qr")?.value;
+    const ItemQuantity = document.getElementById("item-quantity")?.value;
+
+    try { 
+      const response = await fetch("http://localhost:8081/addItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ItemName, ItemQuantity, ItemQR }),
+      });
+      localStorage.removeItem("inventory");
+      alert("Dodano produkt");
+      setTimeout(() => {
+        window.location.reload();
+      },1000);
+    } catch (error) {
+      alert("Error adding warehouse space");
     }
   }
   /*** 🔹 Event Listeners ***/

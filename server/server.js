@@ -169,6 +169,27 @@ app.post("/addDamageReport", (req, res) => {
 });
 
 
+app.post("/addItem", (req, res) => {
+  const { ItemName, ItemQR, ItemQuantity } = req.body;
+  db.query(
+    "INSERT INTO inventory (nazwa, ilosc, qr_code) VALUES (?, ?, ?)",
+    [ItemName, ItemQuantity, ItemQR],
+    (err, result) => {
+      if (err) {
+        return res.send({ err: err });
+      }
+      if (result.length > 0) {
+        return res.send(result);
+      } else {
+        return res.send({ message: "Something went wrong" });
+      }
+    }
+  );
+});
+
+
+
+
 app.post("/removeItem", (req, res) => {
   const { id } = req.body;
   db.query(
