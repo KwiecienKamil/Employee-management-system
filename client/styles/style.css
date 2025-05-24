@@ -388,7 +388,8 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  gap: .2rem;
+  /* flex-wrap: wrap; */
   width: 100%;
 }
 .inventory-item {
@@ -401,7 +402,8 @@ main {
 .inventory-wrapper,
 .damage-reports-wrapper,
 .announcements-wrapper {
-  min-width: 25rem;
+  flex: 1;
+  margin-right: 1rem;
   max-height: 30rem;
   overflow-y: scroll;
   display: flex;
@@ -470,7 +472,7 @@ main {
 }
 /* operacje.html */
 .form-container {
-  min-width: 350px;
+  min-width: 250px;
   margin: 20px auto;
 }
 
@@ -538,16 +540,21 @@ main {
 }
 
 .add-item-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 1.5rem;
   background: white;
   border-radius: 1rem;
-  font-size: 1rem;
   text-align: center;
-  margin-bottom: .5rem;
 }
+.add-item-container h2 {
+  font-size: 1.1rem;
+}
+
 .add-item-input input {
-  font-size: 1.2rem;
-  padding: .2rem;
+  font-size: 12px;
+  padding: .1rem;
 }
 
 #addItemButton {
@@ -563,4 +570,32 @@ main {
 
 #addItemButton:hover {
   background: rgb(24, 222, 24);
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-info p {
+  font-weight: 700;
+}
+
+.product-nav {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+#editBtn {
+  border: none;
+  background: rgb(220, 220, 42);
+   padding: .3rem .5rem .3rem .5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+#editBtn:hover {
+  background: yellow;
 }

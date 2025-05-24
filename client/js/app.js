@@ -158,11 +158,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const itemDiv = document.createElement("div");
         itemDiv.classList.add("inventory-item");
         itemDiv.innerHTML = `
-          <h5>${item.nazwa}</h5>
           <div>
+            <div class="product-info" />
             <p>Ilość: ${item.ilosc}</p>
+            <p>Regał: ${item.shelf_number}</p>
+            <p>Półka: ${item.place_number}</p>
+            </div>
+            <h5>${item.nazwa}</h5>
             <p>QR Code: ${item.qr_code}</p>
+            <div class="product-nav">
             <button onclick="removeItem(${item.id})" id="deleteBtn">Usuń</button>
+            </div>
           </div>
         `;
         inventoryContainer.appendChild(itemDiv);
@@ -536,12 +542,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const ItemName = document.getElementById("item-name")?.value;
     const ItemQR = document.getElementById("item-qr")?.value;
     const ItemQuantity = document.getElementById("item-quantity")?.value;
+    const ItemShelf = document.getElementById("item-shelf")?.value;
+    const ItemPlace = document.getElementById("item-place")?.value;
 
     try { 
       const response = await fetch("http://localhost:8081/addItem", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ItemName, ItemQuantity, ItemQR }),
+        body: JSON.stringify({ ItemName, ItemQuantity, ItemQR, ItemShelf, ItemPlace }),
       });
       localStorage.removeItem("inventory");
       alert("Dodano produkt");

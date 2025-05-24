@@ -170,10 +170,10 @@ app.post("/addDamageReport", (req, res) => {
 
 
 app.post("/addItem", (req, res) => {
-  const { ItemName, ItemQR, ItemQuantity } = req.body;
+  const { ItemName, ItemQR, ItemQuantity, itemShelf, itemPlace } = req.body;
   db.query(
-    "INSERT INTO inventory (nazwa, ilosc, qr_code) VALUES (?, ?, ?)",
-    [ItemName, ItemQuantity, ItemQR],
+    "INSERT INTO inventory (nazwa, ilosc, qr_code, shelf_number, place_number) VALUES (?, ?, ?, ?, ?)",
+    [ItemName, ItemQuantity, ItemQR, itemShelf, itemPlace],
     (err, result) => {
       if (err) {
         return res.send({ err: err });
